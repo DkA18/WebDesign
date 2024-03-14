@@ -1,84 +1,95 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Website</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
-    <style>
-        body {
-            background-color: #121212;
-            color: #fff;
-        }
-
-        .navbar-toggler {
-            border-color: #fff;
-        }
-
-        .navbar-toggler-icon {
-            background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3e%3cpath stroke='rgba(255, 255, 255, 0.7)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
-        }
-
-        .navbar-collapse {
-            display: none;
-        }
-
-        .navbar-collapse.show {
-            display: block;
-            animation: slideDown 1s ease-out forwards;
-        }
-
-        .container-fluid.show {
-            animation: slideDown 1s ease-out forwards;
-        }
-
-        @keyframes slideDown {
-            from {
-                transform: translateY(-100%);
-                background-color: chocolate;
-            }
-
-            to {
-                transform: translateY(0);
-            }
-        }
-    </style>
+    <title>Realistic Solar System</title>
 </head>
 
 <body>
+    <style>
+        svg {
+            border: 1px solid black;
+            background-color: black;
+        }
 
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="#">Navbar</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">About</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Services</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Contact</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
+        .orbit {
+            fill: none;
+            stroke: gray;
+            stroke-width: 1px;
+        }
 
-    <div class="container mt-5">
-        <p>Make the window smaller for hamburger menu.</p>
-    </div>
+        #sun {
+            animation-name: sunblur;
+            animation-duration: 3s;
+            animation-iteration-count: infinite;
+            animation-timing-function: ease-in-out;
+        }
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+        #earth {
+            fill: cyan;
+        }
+
+        #moon {
+            fill: white;
+        }
+
+        @keyframes sunblur {
+            from {
+                filter: blur(3px);
+            }
+
+            50% {
+                filter: blur(4px);
+            }
+
+            to {
+                filter: blur(3px);
+            }
+        }
+    </style>
+
+    <svg width="800" height="600" viewbox="-400 -300 800 600" xmlns="http://www.w3.org/2000/svg">
+        <circle id="sun" cx="0" cy="0" r="20" fill="yellow" />
+        <!-- Earth's orbit -->
+        <ellipse class="orbit" cx="0" cy="0" rx="150" ry="100" />
+        <!-- Earth -->
+        <circle id="earth" cx="150" cy="0" r="10" />
+        <!-- Moon's orbit -->
+        <ellipse class="orbit" cx="150" cy="0" rx="40" ry="30" />
+        <!-- Moon -->
+        <circle id="moon" cx="190" cy="0" r="3" />
+    </svg>
+
+    <script>
+        // Simulate planetary motion
+        const earthOrbit = document.querySelector('#earth').getAttribute('cx');
+        const moonOrbit = document.querySelector('#moon').getAttribute('cx');
+        let earthAngle = 0;
+        let moonAngle = 0;
+        const earthSpeed = 0.05; // Adjust the speed as needed
+        const moonSpeed = 0.2; // Adjust the speed as needed
+
+        function animate() {
+            earthAngle += earthSpeed;
+            moonAngle += moonSpeed;
+
+            const earthX = Math.cos(earthAngle) * earthOrbit;
+            const earthY = Math.sin(earthAngle) * 100; // Assuming a slightly tilted orbit
+
+            const moonX = Math.cos(moonAngle) * moonOrbit + earthX;
+            const moonY = Math.sin(moonAngle) * 30; // Assuming a slightly tilted orbit
+
+            document.querySelector('#earth').setAttribute('cx', earthX);
+            document.querySelector('#earth').setAttribute('cy', earthY);
+            document.querySelector('#moon').setAttribute('cx', moonX);
+            document.querySelector('#moon').setAttribute('cy', moonY);
+
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+    </script>
+
 </body>
 
 </html>
